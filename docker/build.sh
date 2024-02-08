@@ -6,7 +6,7 @@ docker build \
        --build-arg CLOG_GIT=https://github.com/lu-cs-sde/clog.git \
        --build-arg CLOG_HASH=b16078260dca9e6437675c2715fdbd4c349a85a4 \
        --build-arg CLOG_EVAL_GIT=https://github.com/alexdura/clog-eval.git \
-       --build-arg CLOG_EVAL_HASH=5e8b5cff366e803bd8bf651ee2a25694d6acee44 \
+       --build-arg CLOG_EVAL_HASH=9458c0d2fc62815796e07600d1fa779ea05aa020 \
        --build-arg LLVM_GIT=https://github.com/alexdura/llvm-project.git \
        --build-arg LLVM_HASH=c9a1d5ea1edc7439f2213fd42a080828d0e7de22 \
        --build-arg JULIET_GIT=https://github.com/alexdura/juliet.git \
