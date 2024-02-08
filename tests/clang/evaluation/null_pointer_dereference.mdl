@@ -47,7 +47,7 @@ NullPtrDeref(cfg_loc) :- NullVar(cfg_loc, v), cfg_loc <: *$v :>, v == c_decl($v)
 NullPtrDeref(cfg_loc) :- NullVar(cfg_loc, v), cfg_loc <: $v[$_] :>, v == c_decl($v).
 NullPtrDeref(cfg_loc) :- NullVar(cfg_loc, v), cfg_loc <: $v -> $f :>, v == c_decl($v).
 
-NullPtrDerefDetail(f, l, c) :- NullPtrDeref(loc), f = c_src_file(loc), l = c_src_line_start(loc), c = c_src_col_start(loc).
+NullPtrDerefDetail(f, l, c) :- NullPtrDeref(loc), f = io_relative_path(c_src_file(loc)), l = c_src_line_start(loc), c = c_src_col_start(loc).
 
 ### Interprocedural analysis
 

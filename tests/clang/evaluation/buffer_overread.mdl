@@ -48,6 +48,6 @@ BufferOverread(c) :- c <: strncpy($dst, $src, $size) :>, ExprPointsToArray($src,
 # BufferOverread(c) :- c <: memmove($dst, $src, $size) :>, ExprPointsToArray($dst, dst_size),
 #                      ExprPointsToArray($src, src_size), src_size > dst_size.
 
-WarnBufferOverread(f, l, c, "BufferOverread") :- BufferOverread(e), f = c_src_file(e), l = c_src_line_start(e), c = c_src_col_start(e).
+WarnBufferOverread(f, l, c, "BufferOverread") :- BufferOverread(e), f = io_relative_path(c_src_file(e)), l = c_src_line_start(e), c = c_src_col_start(e).
 
 OUTPUT('WarnBufferOverread, "WarnBufferOverread.csv", "csv").

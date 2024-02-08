@@ -42,10 +42,10 @@ VarPointsTo(to, heap) :- InterProcAssign(to, from), VarPointsTo(from, heap).
 Reachable(f) :- f <: int main(..) {.. } :>.
 
 VarPointsToDetail(vf, vl, vc, hf, hl, hc) :- VarPointsTo(v, h),
-                      vf = c_src_file(v),
+                      vf = io_relative_path(c_src_file(v)),
                       vl = c_src_line_start(v),
                       vc = c_src_col_start(v),
-                      hf = c_src_file(h),
+                      hf = io_relative_path(c_src_file(h)),
                       hl = c_src_line_start(h),
                       hc = c_src_col_start(h).
 

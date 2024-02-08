@@ -62,7 +62,7 @@ PotentialMemRead($v, v) :- <: return $v; :>, v = c_decl($v), node_to_id(v) != 0.
 
 
 WarnUseAfterFree(f, l, c, "UseAfterFree") :- VarPointsToFreedMem(cfg_loc, p), PotentialMemRead(cfg_loc, p),
-                                                f = c_src_file(cfg_loc),
+                                                f = io_relative_path(c_src_file(cfg_loc)),
                                                 l = c_src_line_start(cfg_loc),
                                                 c = c_src_col_start(cfg_loc).
 

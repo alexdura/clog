@@ -12,7 +12,7 @@ ISendWithoutWait(s) :- ISendCall(s, _), ISendReqOverwrite(s).
 ISendWithoutWait(s) :- ISendCallChain(s, c), ISendCall(s, r), f = c_enclosing_function(s),
                     CFG_EXIT(f, exit), exit == c, !WaitCall(c, r).
 
-WarnISendWithoutWait(f, l, c, "ISend without wait") :- ISendWithoutWait(s), f = c_src_file(s),
+WarnISendWithoutWait(f, l, c, "ISend without wait") :- ISendWithoutWait(s), f = io_relative_path(c_src_file(s)),
                         l = c_src_line_start(s), c = c_src_col_start(s).
 
 OUTPUT('WarnISendWithoutWait, "WarnISendWithoutWait.csv", "csv").
