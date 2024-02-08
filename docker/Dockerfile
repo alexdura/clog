@@ -90,10 +90,10 @@ RUN cd /work/projects/llvm-project/build-release && ninja clang-tidy
 RUN git config --global url."https://github.com/".insteadOf "git://github.com:"
 RUN git config --global url."https://github.com/".insteadOf "git@github.com:"
 
-ARG JAVADL_GIT
-ARG JAVADL_HASH
-RUN cd /work/projects && git clone $JAVADL_GIT metadl
-RUN cd /work/projects/metadl && git checkout $JAVADL_HASH && git submodule update --init --recursive
+ARG CLOG_GIT
+ARG CLOG_HASH
+RUN cd /work/projects && git clone $CLOG_GIT metadl
+RUN cd /work/projects/metadl && git checkout $CLOG_HASH && git submodule update --init --recursive
 
 RUN cd /work/projects/metadl && ./gradlew jar
 
