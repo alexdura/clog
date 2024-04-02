@@ -144,7 +144,7 @@ Term term = variable
 
 Wildcard wildcard = WILDCARD {: return new Wildcard(); :};
 
-Term undef = UNDEF {: return Constructors.functor("id_to_node", Constructors.integer(0)); :}
+Term undef = UNDEF {: return Constructors.functor("id_to_node", Constructors.integer(0)); :};
 
 PredicateSymbol pred_sym = PRED_ID.id  {: return new PredicateSymbol(id); :};
 
