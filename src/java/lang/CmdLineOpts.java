@@ -275,12 +275,8 @@ public class CmdLineOpts {
 				} else {
 					ret.srcs = new TreeMap<>();
 					for (String f : cmd.getOptionValue("S").split(":")) {
-						String[] fileAndMod = f.split(",");
-						if (fileAndMod.length != 2) {
-							throw new RuntimeException("Error parsing the -sources [-S] argument.");
-						} else {
-							ret.srcs.put(fileAndMod[0], fileAndMod[1]);
-						}
+						// [CR] I don't think we use this yet
+						ret.srcs.put(f, "A");
 					}
 				}
 			} else {

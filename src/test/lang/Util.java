@@ -229,7 +229,7 @@ public final class Util {
                                           String cmd,
                                           String Xclang) throws Exception {
 
-    String sources = analyzedFiles.stream().map(f -> f.getPath() + ",A").collect(Collectors.joining(":"));
+    String sources = analyzedFiles.stream().map(f -> f.getPath()).collect(Collectors.joining(":"));
 
     String desc = cmd
       + " -L " + lang

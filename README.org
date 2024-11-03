@@ -172,12 +172,12 @@ Clog supports multiple running modes, which represent a trade-off between speed 
 ** Internal evaluation
 Uses the internal semi-naive evaluator and it is reasonably fast when the number of tuples is small (< 1 million).
 #+BEGIN_SRC
-java -jar compiler.jar --eval metadl program.mdl -F fact_dir -D output_dir
+java -jar compiler.jar --eval metadl program.mdl -F fact_dir -D output_dir -S program_to_analyse_dir
 #+END_SRC
 ** Internal parallel evaluation
 Depending on the shape of the strata dependency is graph, the parallel evaluator may speed things up.
 #+BEGIN_SRC
-java -jar compiler.jar --eval metadl-par program.mdl -F fact_dir -D output_dir
+java -jar compiler.jar --eval metadl-par program.mdl -F fact_dir -D output_dir -S program_to_analyse_dir
 #+END_SRC
 
 * Language description
