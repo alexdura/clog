@@ -49,6 +49,7 @@ public class CEvaluationTest {
                                 "--extra-arg -I" + includeDir.toAbsolutePath());
     } catch (Exception e) {
       System.err.println("Unexpected exception " + e);
+      e.printStackTrace();
       fail();
     }
   }
