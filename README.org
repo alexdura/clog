@@ -44,29 +44,54 @@ Clog depends on modified versions of [[http://jastadd.org/web/][JastAdd]] and [[
 Ensure that the ~souffle~ executable is available in your ~$PATH~.
 
 For the ~hybrid~ and ~incremental~ evaluation modes, a version a modified version of Souffle is needed. This version exposes an extended JNI interface and uses a different format for SQLite input and output.
+
+** Building Soufflé (optional)
+
+Soufflé can be used for some execution modes, though by default Clog does not use it.
+
+To build, you will need the following:
+- a complete build system for C, including the GNU autotools
+- ~mcpp~
+- ~swig~
+
+Clone the repository
 #+BEGIN_SRC
-git clone https://github.com/alexdura/souffle.git -b javadl
+git clone https://github.com/creichen/souffle.git -b javadl
 #+END_SRC
 When building, make sure to enable 64-bit domains and SWIG (needed only for the hybrid mode):
 #+BEGIN_SRC
+cd souffle
 ./bootstrap
 ./configure --enable-swig --enable-64bit-domain
 make
 #+END_SRC
 
-** C support
+Environment variables (relative to ~clog~ project root):
+- ~PATH~ must contain ~./souffle/src/~, unless you install ~souffle~ globally (~sudo make install~)
+
+** C support (required for Clog)
 For analyzing C, Clog uses the Clang front-end for pattern matching. We have built a Clang library to interface with Clog. Run  the following commands to fetch and build a modified version of the LLVM repository:
+
+
+Install the following dependencies:
+- ~swig4.0~
+
 #+BEGIN_SRC
 git clone git@github.com:alexdura/llvm-project.git -b clog
 #+END_SRC
 To build the library, run the following commands:
 #+BEGIN_SRC
+mkdir llvm-project/build-release
 cd llvm-project/build-release
 cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra"  -DBUILD_SHARED_LIBS=ON  -DLLVM_APPEND_VC_REV=OFF   ../llvm
 ninja
 #+END_SRC
 
-** Docker
+Environment variables (relative to ~clog~ project root):
+- ~PATH~ must contain ~./llvm-project/build-release/bin/~
+- ~LD_LIBRARY_PATH~ must contain ~./llvm-project/build-release/lib/~
+
+** Docker image (if you want to run in Podman or Docker)
 We provide a Docker image which contains Clog and evaluation scripts, packaged together with all the required dependencies.
 #+BEGIN_SRC
 cd docker
@@ -75,6 +100,71 @@ cd docker
 then run the image using:
 #+BEGIN_SRC
 docker run -it clog23:cc24
+#+END_SRC
+
+** Clog itself
+
+Java versions that should work:
+- Java 11
+
+#+BEGIN_SRC
+./gradlew clean jar
+./gradlew test
+#+END_SRC
+
+*** Troubleshooting
+If any Clog tests fail, try the following tests to narrow down the problem.
+You can run an individual test (e.g., ~lang.CEvaluationTest~) as follows:
+
+#+BEGIN_SRC
+./gradlew test --info --tests lang.CEvaluationTest
+#+END_SRC
+
+- ~Cannot find symbol: var~: Make sure to use Java 11
+- ~Could not create an instance of type org.gradle.initialization.DefaultSettings_Decorated~: Make sure to use Java 11
+- ~lang.CEvaluationTest~ fails with ~UnsatisfiedLinkError~: See ~UnsatisfiedLinkError~ below
+- ~clang.ASTImporterTest~ fails with ~IOException: Cannot run program "clang"~: See "Missing clang" below
+- ~lang.EvaluationTest~ fails with ~IOException: Cannot run program "souffle"~: See "Missing Soufflé" below (not needed to run Clog with internal evaluation)
+
+*** Troubleshooting: ~UnsatisfiedLinkError~
+#+BEGIN_SRC
+./gradlew test --info --tests lang.CEvaluationTest
+#+END_SRC
+
+If you get the error ~java.lang.UnsatisfiedLinkError: no clangClogSWIG in ...~, make sure that ~libclangClogSWIG.so~ is in your ~LD_LIBRARY_PATH~.
+If you followed the "C support" steps above and are using ~bash~, you might e.g. run:
+
+#+BEGIN_SRC
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:`pwd`/llvm-project/build-release/lib/
+#+END_SRC
+
+*** Troubleshooting: Missing Soufflé
+
+#+BEGIN_SRC
+./gradlew test --info --tests lang.EvaluationTest
+#+END_SRC
+
+If you get the error ~java.io.IOException: Cannot run program "souffle": error=2, No such file or directory~, then the ~souffle~ binary is not in your ~PATH~.
+Make sure it is visible there (i.e., you should be able to run ~souffle~ on the shell and see a help message).
+If you followed the "Building soufflé" steps above and are using ~bash~, you might e.g. run:
+
+#+BEGIN_SRC
+export PATH=${PATH}:`pwd`/souffle/src
+#+END_SRC
+
+
+*** Troubleshooting: Missing Clang
+
+#+BEGIN_SRC
+./gradlew test --info --tests clang.ASTImporterTest
+#+END_SRC
+
+If you get the error ~java.io.IOException: Cannot run program "clang": error=2, No such file or directory~, then the ~clang~ binary is not in your ~PATH~.
+Make sure it is visible there (i.e., you should be able to run ~clang --help~ on the shell and see a help message).
+If you followed the "C support" steps above and are using ~bash~, you might e.g. run:
+
+#+BEGIN_SRC
+export PATH=${PATH}:`pwd`/llvm-project/build-release/bin/
 #+END_SRC
 
 * Running
